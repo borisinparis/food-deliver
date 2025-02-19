@@ -6,14 +6,17 @@ import { useEffect, useState } from "react";
 type searchValue = string;
 
 // const [error, setErrors] = useState({});
-const [valueInput, setValueInput] = useState([]);
-const [valueLogin, setValueLogin] = useState<searchValue>("");
-const onChange = (event) => {
-  setValueLogin(event.target.value);
-};
-useEffect(() => {}, []);
+// const [valueInput, setValueInput] = useState([]);
 
 export const HomePageLogin = () => {
+  const [valueLogin, setValueLogin] = useState("");
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValueLogin(event.target.value);
+  };
+  useEffect(() => {
+    console.log(valueLogin);
+  }, [valueLogin]);
+
   return (
     <>
       <div className="m-0 p-0 w-screen h-screen  box-border">
@@ -24,7 +27,7 @@ export const HomePageLogin = () => {
               Log in to enjoy your favorite dishes.
             </p>
             <Input
-              //   value={valueLogin}
+              value={valueLogin}
               onChange={onChange}
               className="mt-[25px]"
               type="email"
@@ -32,7 +35,7 @@ export const HomePageLogin = () => {
             />
             {/* <div className="text-red-700">{error}</div> */}
             <Input
-              //   value={valueLogin}
+              value={valueLogin}
               onChange={onChange}
               className="mt-[20px]"
               type="password"
