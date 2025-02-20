@@ -5,9 +5,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 type searchValue = string;
 
-// const [error, setErrors] = useState({});
-// const [valueInput, setValueInput] = useState([]);
-
 export const HomePageLogin = () => {
   const [valueLogin, setValueLogin] = useState("");
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
