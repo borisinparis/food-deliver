@@ -1,10 +1,10 @@
 "use client";
+import SignUp from "./ features/Sign-up";
 
-import { HomePageLogin } from "@/app/component/HomePageLogin";
 export default function Home() {
   return (
     <div>
-      <HomePageLogin />
+      <SignUp />
     </div>
   );
 }
