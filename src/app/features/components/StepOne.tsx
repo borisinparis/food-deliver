@@ -3,52 +3,59 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-type setValueSigntype = {
-  email: string;
-};
+import { valueSignType } from "../Sign-up";
+import axios from "axios";
 
-type valueSignType = {
-  email: string;
-};
-
-export const StepOne = ({
-  onNextStep,
-  valueSign,
-  setValueSign,
-}: {
+type StepOneProps = {
   onNextStep: () => void;
   valueSign: valueSignType;
-  setValueSign: (value: setValueSigntype) => void;
-}) => {
-  // const [valueLogin, setValueLogin] = useState("");
+  setValueSign: (value: valueSignType) => void;
+};
+
+export const StepOne = (props: StepOneProps) => {
+  const { onNextStep, valueSign, setValueSign } = props;
 
   const [errors, setErrors] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const getData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/users`);
+      console.log(response);
+    } catch (err) {
+      console.log("data oldsongui");
+    }
+  };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValueSign({ email: event.target.value });
-    let validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (valueSign.email.match(validRegex)) {
-      return setErrors(true);
-    }
+    setValueSign({ ...valueSign, email: event.target.value });
   };
   useEffect(() => {
     console.log(valueSign.email);
   }, [valueSign.email]);
-  const onSubmit = () => {
+  useEffect(() => {
+    getData();
+  }, []);
+  const onSubmit = async () => {
     let validRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    setErrors(false);
     if (
       valueSign.email.match(validRegex) &&
       valueSign.email.length >= 6 &&
       valueSign.email.includes(".com") &&
       valueSign.email.includes("gmail")
     ) {
-      //   alert("valid email");
-      onNextStep();
+      try {
+        setLoading(true);
+        const response = await axios.post(`http://localhost:4000/users`, {
+          email: valueSign.email,
+        });
+        console.log(response);
+
+        onNextStep();
+      } catch (err) {}
+      setLoading(false);
     } else {
-      setErrors(false);
+      setLoading(false);
       alert("no email");
       return setErrors(false);
     }

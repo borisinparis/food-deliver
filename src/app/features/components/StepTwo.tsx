@@ -4,16 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { valueSignType } from "../Sign-up";
 
-type setValuePass = {
-  password: string;
+type StepTwoProps = {
+  onNextStep: () => void;
+  valueSign: valueSignType;
+  setValueSign: (value: valueSignType) => void;
 };
 
-export const StepTwo = ({ onNextStep }: { onNextStep: () => void }) => {
-  const [valuePassword, setValuePassword] = useState({
-    type: "password",
-    value: "",
-  });
+export const StepTwo = (props: StepTwoProps) => {
+  const { onNextStep, valueSign, setValueSign } = props;
   const [valueConfrim, setValueConfirm] = useState({
     type: "password",
     value: "",
@@ -21,34 +21,36 @@ export const StepTwo = ({ onNextStep }: { onNextStep: () => void }) => {
   const [errors, setErrors] = useState(false);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValuePassword({ ...valuePassword, value: event.target.value });
+    setValueSign({ ...valueSign, password: event.target.value });
   };
+
   const onChangeConfirm = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueConfirm({ ...valueConfrim, value: event.target.value });
   };
 
   const onSubmit = () => {
-    if (valuePassword.value === valueConfrim.value) {
+    if (valueSign.password === valueConfrim.value) {
       onNextStep();
       return true;
     } else {
       alert("buruu bna tarsangiu");
     }
   };
-  const CheckCheck = () => {
+
+  const checkPassword = () => {
     if (valueConfrim.type === "password") {
       setValueConfirm({ ...valueConfrim, type: "text" });
-      setValuePassword({ ...valuePassword, type: "text" });
+      // setValueSign({ ...valueSign, });
     } else {
       setValueConfirm({ ...valueConfrim, type: "password" });
-      setValuePassword({ ...valuePassword, type: "password" });
+      // setValuePassword({ ...valueSign.password, type: "password" });
     }
   };
 
   useEffect(() => {
     console.log(valueConfrim);
-    console.log(valuePassword);
-  }, [valueConfrim, valuePassword]);
+    console.log(valueSign.password);
+  }, [valueConfrim, valueSign.password]);
   return (
     <>
       <div className="m-0 p-0 w-screen h-screen  box-border">
@@ -59,10 +61,10 @@ export const StepTwo = ({ onNextStep }: { onNextStep: () => void }) => {
               Sign up to explore your favorite dishes.
             </p>
             <Input
-              value={valuePassword.value}
+              value={valueSign.password}
               onChange={onChange}
               className="mt-[25px]"
-              type={valuePassword.type}
+              type={valueConfrim.type}
               placeholder="Password"
             />
             <Input
@@ -72,7 +74,7 @@ export const StepTwo = ({ onNextStep }: { onNextStep: () => void }) => {
               type={valueConfrim.type}
               placeholder="Password"
             />
-            <input type="checkbox" onClick={CheckCheck} /> show password
+            <input type="checkbox" onClick={checkPassword} /> show password
             {errors && (
               <p className="text-red-700">
                 Those password didn't match, Try again
