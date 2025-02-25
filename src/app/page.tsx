@@ -1,10 +1,11 @@
 "use client";
-import SignUp from "./features/Sign-up";
+import * as Yup from "yup";
+import Login from "@/app/features/login/page";
 
 export default function Home() {
   return (
     <div>
-      <SignUp />
+      <Login />
     </div>
   );
 }

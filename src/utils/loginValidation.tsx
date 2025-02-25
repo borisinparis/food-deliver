@@ -1,7 +1,7 @@
 import * as Yup from "yup";
-import { object, string, number, date, InferType } from "yup";
+import { object, string } from "yup";
 
 export let userSchema = object({
-  email: string().min(8).email(),
-  password: string().email().required(),
+  email: string().email().required(),
+  password: string().min(8).required(),
 });

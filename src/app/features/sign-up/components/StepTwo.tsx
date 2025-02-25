@@ -1,22 +1,26 @@
 "use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { valueSignType } from "../Sign-up";
+import { valueSignType } from "../page";
 import axios from "axios";
-
-type StepOneProps = {
+type StepTwoProps = {
   onNextStep: () => void;
   valueSign: valueSignType;
   setValueSign: (value: valueSignType) => void;
 };
 
-export const StepOne = (props: StepOneProps) => {
+export const StepTwo = (props: StepTwoProps) => {
   const { onNextStep, valueSign, setValueSign } = props;
-
-  const [errors, setErrors] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [valueConfrim, setValueConfirm] = useState({
+    type: "password",
+    value: "",
+  });
+  const [errors, setErrors] = useState(false);
+
   const getData = async () => {
     try {
       const response = await axios.get(`http://localhost:4000/users`);
@@ -27,43 +31,47 @@ export const StepOne = (props: StepOneProps) => {
   };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValueSign({ ...valueSign, email: event.target.value });
+    setValueSign({ ...valueSign, password: event.target.value });
   };
-  useEffect(() => {
-    console.log(valueSign.email);
-  }, [valueSign.email]);
-  useEffect(() => {
-    getData();
-  }, []);
+
+  const onChangeConfirm = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValueConfirm({ ...valueConfrim, value: event.target.value });
+  };
+
   const onSubmit = async () => {
-    let validRegex =
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (
-      valueSign.email.match(validRegex) &&
-      valueSign.email.length >= 6 &&
-      valueSign.email.includes(".com") &&
-      valueSign.email.includes("gmail")
-    ) {
+    if (valueSign.password === valueConfrim.value) {
       try {
         setLoading(true);
         const response = await axios.post(`http://localhost:4000/users`, {
-          email: valueSign.email,
+          password: valueSign.password,
         });
         console.log(response);
 
         onNextStep();
       } catch (err) {}
-      setLoading(false);
     } else {
-      setLoading(false);
-      alert("no email");
-      return setErrors(false);
+      alert("buruu bna tarsangiu");
     }
   };
-  useEffect(() => {
-    setErrors(true);
-  }, []);
 
+  const checkPassword = () => {
+    if (valueConfrim.type === "password") {
+      setValueConfirm({ ...valueConfrim, type: "text" });
+      // setValueSign({ ...valueSign, });
+    } else {
+      setValueConfirm({ ...valueConfrim, type: "password" });
+      // setValuePassword({ ...valueSign.password, type: "password" });
+    }
+  };
+
+  useEffect(() => {
+    console.log(valueConfrim);
+    console.log(valueSign.password);
+  }, [valueConfrim, valueSign.password]);
+
+  useEffect(() => {
+    getData();
+  }, []);
   return (
     <>
       <div className="m-0 p-0 w-screen h-screen  box-border">
@@ -74,15 +82,23 @@ export const StepOne = (props: StepOneProps) => {
               Sign up to explore your favorite dishes.
             </p>
             <Input
-              value={valueSign.email}
+              value={valueSign.password}
               onChange={onChange}
               className="mt-[25px]"
-              type="email"
-              placeholder="Enter your email address"
+              type={valueConfrim.type}
+              placeholder="Password"
             />
+            <Input
+              value={valueConfrim.value}
+              onChange={onChangeConfirm}
+              className="mt-[25px]"
+              type={valueConfrim.type}
+              placeholder="Password"
+            />
+            <input type="checkbox" onClick={checkPassword} /> show password
             {errors && (
-              <p className=" mt-[25px] text-red-700">
-                Invalid email. Use a format like example@email.com
+              <p className="text-red-700">
+                Those password didn't match, Try again
               </p>
             )}
             {errors ? (
@@ -98,7 +114,6 @@ export const StepOne = (props: StepOneProps) => {
                 Button
               </Button>
             )}
-
             <div className="flex mt-[20px] justify-center gap-[10px]">
               <p className="text-base">Already have an account?</p>
               <Link href={"#"} className="text-[#2563EB]">
@@ -114,4 +129,3 @@ export const StepOne = (props: StepOneProps) => {
     </>
   );
 };
-export default StepOne;

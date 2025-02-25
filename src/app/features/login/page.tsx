@@ -1,40 +1,33 @@
 "use client";
-
+import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import Link from "next/link";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { userSchema } from "@/utils/loginValidation";
-import { StepOne } from "@/app/features/components/StepOne";
+import { useRouter } from "next/navigation";
 
 type LoginInfoTypes = {
   email: string;
   password: string;
 };
 
-type StepThirdTypes = {
-  onNextStep: () => void;
-};
-
-export const StepThird = (props: StepThirdTypes) => {
-  const { onNextStep } = props;
+export const Login = () => {
+  const { push } = useRouter();
   const [showStepOne, setShowStepOne] = useState(false);
 
-  // State for StepOne values
   const [valueSign, setValueSign] = useState({
     email: "",
     password: "",
   });
 
   const handleSignUpClick = () => {
-    setShowStepOne(true); // Trigger StepOne to display
+    setShowStepOne(true);
+    push("/features/sign-up");
   };
 
   const handleSubmit = async (values: LoginInfoTypes) => {
-    // Handle the submit action
     console.log(values);
-    onNextStep(); // Proceed to the next step after form submission
   };
 
   return (
@@ -107,15 +100,6 @@ export const StepThird = (props: StepThirdTypes) => {
             </div>
           </div>
 
-          {/* Conditionally render StepOne */}
-          {showStepOne && (
-            <StepOne
-              onNextStep={onNextStep}
-              valueSign={valueSign} // Pass valueSign to StepOne
-              setValueSign={setValueSign} // Pass setValueSign to StepOne
-            />
-          )}
-
           <div className="w-[856px] h-[904px]">
             <img src="deliverFood.png" alt="Food delivery illustration" />
           </div>
@@ -124,3 +108,4 @@ export const StepThird = (props: StepThirdTypes) => {
     </>
   );
 };
+export default Login;
