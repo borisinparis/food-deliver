@@ -28,6 +28,7 @@ export const Login = () => {
 
   const handleSubmit = async (values: LoginInfoTypes) => {
     console.log(values);
+    push("/features/homePage")
   };
 
   return (
