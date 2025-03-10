@@ -2,10 +2,11 @@
 import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { userSchema } from "@/utils/loginValidation";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 type LoginInfoTypes = {
   email: string;
@@ -14,8 +15,8 @@ type LoginInfoTypes = {
 
 export const Login = () => {
   const { push } = useRouter();
+  const [getDatas, setGetDatas] = useState([]);
   const [showStepOne, setShowStepOne] = useState(false);
-
   const [valueSign, setValueSign] = useState({
     email: "",
     password: "",
@@ -28,7 +29,7 @@ export const Login = () => {
 
   const handleSubmit = async (values: LoginInfoTypes) => {
     console.log(values);
-    push("/features/homePage")
+    push("/features/homePage");
   };
 
   return (
