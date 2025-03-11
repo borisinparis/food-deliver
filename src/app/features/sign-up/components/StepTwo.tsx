@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { valueSignType } from "../page";
@@ -20,15 +21,7 @@ export const StepTwo = (props: StepTwoProps) => {
     value: "",
   });
   const [errors, setErrors] = useState(false);
-
-  const getData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/users`);
-      console.log(response);
-    } catch (err) {
-      console.log("data oldsongui");
-    }
-  };
+  const { push } = useRouter();
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueSign({ ...valueSign, password: event.target.value });
@@ -42,12 +35,16 @@ export const StepTwo = (props: StepTwoProps) => {
     if (valueSign.password === valueConfrim.value) {
       try {
         setLoading(true);
-        const response = await axios.post(`http://localhost:4000/users`, {
-          password: valueSign.password,
-        });
+        const response = await axios.post(
+          `http://localhost:4000/users/sign-up`,
+          {
+            email: valueSign.email,
+            password: valueSign.password,
+          }
+        );
         console.log(response);
 
-        onNextStep();
+        push("/features/login");
       } catch (err) {}
     } else {
       alert("buruu bna tarsangiu");
@@ -69,9 +66,6 @@ export const StepTwo = (props: StepTwoProps) => {
     console.log(valueSign.password);
   }, [valueConfrim, valueSign.password]);
 
-  useEffect(() => {
-    getData();
-  }, []);
   return (
     <>
       <div className="m-0 p-0 w-screen h-screen  box-border">

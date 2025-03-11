@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { valueSignType } from "../page";
 import axios from "axios";
+import { toast } from "sonner";
 
 type StepOneProps = {
   onNextStep: () => void;
@@ -17,14 +18,6 @@ export const StepOne = (props: StepOneProps) => {
 
   const [errors, setErrors] = useState(true);
   const [loading, setLoading] = useState(false);
-  const getData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:4000/users`);
-      console.log(response);
-    } catch (err) {
-      console.log("data oldsongui");
-    }
-  };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValueSign({ ...valueSign, email: event.target.value });
@@ -32,9 +25,6 @@ export const StepOne = (props: StepOneProps) => {
   useEffect(() => {
     console.log(valueSign.email);
   }, [valueSign.email]);
-  useEffect(() => {
-    getData();
-  }, []);
   const onSubmit = async () => {
     let validRegex =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -45,18 +35,12 @@ export const StepOne = (props: StepOneProps) => {
       valueSign.email.includes("gmail")
     ) {
       try {
-        setLoading(true);
-        const response = await axios.post(`http://localhost:4000/users`, {
-          email: valueSign.email,
-        });
-        console.log(response);
-
         onNextStep();
       } catch (err) {}
       setLoading(false);
     } else {
       setLoading(false);
-      alert("no email");
+      alert("mail buruu bna");
       return setErrors(false);
     }
   };
@@ -101,7 +85,7 @@ export const StepOne = (props: StepOneProps) => {
 
             <div className="flex mt-[20px] justify-center gap-[10px]">
               <p className="text-base">Already have an account?</p>
-              <Link href={"#"} className="text-[#2563EB]">
+              <Link href={"/features/login"} className="text-[#2563EB]">
                 Log in
               </Link>
             </div>
