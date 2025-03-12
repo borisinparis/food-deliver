@@ -1,4 +1,5 @@
 import { Car, Menu, Search, Settings } from "lucide-react";
+import Image from "next/image";
 
 import {
   Sidebar,
@@ -40,7 +41,19 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <div className="flex">
+            <Image
+              src="/logo.png"
+              width={40}
+              height={10}
+              alt="Picture of the author"
+            />
+            <div>
+              <div>NomNom</div>
+              <div>Swift delivery</div>
+            </div>
+          </div>
+
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

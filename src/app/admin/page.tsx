@@ -1,5 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
+import * as React from "react";
 
 export const AdminPage = () => {
   return (
@@ -8,7 +9,7 @@ export const AdminPage = () => {
         <AppSidebar />
         <main>
           <SidebarTrigger />
-          {/* {children} */}
+          <div className="w-[1171px] h-[948px]"></div>
         </main>
       </SidebarProvider>
     </>

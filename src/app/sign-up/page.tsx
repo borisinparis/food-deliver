@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import StepOne from "../sign-up/components/StepOne";
-import { StepTwo } from "../sign-up/components/StepTwo";
+import StepOne from "./components/StepOne";
+import { StepTwo } from "./components/StepTwo";
 
 export type valueSignType = {
   password: string;

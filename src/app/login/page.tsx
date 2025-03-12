@@ -12,9 +12,6 @@ type LoginInfoTypes = {
   email: string;
   password: string;
 };
-type ErrorType = {
-  error: string;
-};
 
 export const Login = () => {
   const { push } = useRouter();
@@ -49,7 +46,7 @@ export const Login = () => {
       } else if (response.data.user.role == "USER") {
         push("/features/homePage");
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(`error:${error.response?.data?.message || error.message} `);
     }
   };

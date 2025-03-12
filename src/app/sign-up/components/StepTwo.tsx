@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { valueSignType } from "../page";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 type StepTwoProps = {
   onNextStep: () => void;
   valueSign: valueSignType;
@@ -45,7 +45,14 @@ export const StepTwo = (props: StepTwoProps) => {
         console.log(response);
 
         push("/features/login");
-      } catch (err) {}
+      } catch (err: unknown) {
+        if (err instanceof AxiosError && err.response && err.response.data) {
+          console.log(err.response.data.message);
+          alert(err.response.data.message);
+        } else {
+          console.error("An unexpected error occurred:", err);
+        }
+      }
     } else {
       alert("buruu bna tarsangiu");
     }
