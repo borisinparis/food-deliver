@@ -13,6 +13,11 @@ type LoginInfoTypes = {
   password: string;
 };
 
+const NEXT_PUBLIC_CLOUDINARY_APIKEY = "533495513536988";
+const CLOUDINARY_UPLOAD_PRESE = "ml_default";
+const CLOUDINARY_CLOUD_NAME = "dfutcgigt";
+const API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
 export const Login = () => {
   const { push } = useRouter();
   const [getDatas, setGetDatas] = useState([]);
@@ -22,11 +27,6 @@ export const Login = () => {
     email: "",
     password: "",
   });
-
-  const handleSignUpClick = () => {
-    setShowStepOne(true);
-    push("/features/sign-up");
-  };
 
   // const handleClick = () => {
   //   toast.success("This is a success message!");
@@ -41,10 +41,8 @@ export const Login = () => {
       );
 
       console.log(response.data.user.role);
-      if (response.data.user.role == "ADMIN") {
-        push("/features/admin");
-      } else if (response.data.user.role == "USER") {
-        push("/features/homePage");
+      if (response.data.user.role == "USER") {
+        push("/homePage");
       }
     } catch (error: any) {
       toast.error(`error:${error.response?.data?.message || error.message} `);
@@ -57,9 +55,7 @@ export const Login = () => {
         <div className="flex justify-center gap-[20px] w-full h-full items-center">
           <div className="w-[416px] h-[376px]">
             <h2 className="text-[25px]">Log in</h2>
-            <p className="mt-[6px] text-base text-gray-400">
-              Log in to enjoy your favorite dishes.
-            </p>
+            <p className="mt-[6px] text-base text-gray-400">Admin log in</p>
 
             <Formik
               initialValues={{ email: "", password: "" }}
@@ -112,13 +108,6 @@ export const Login = () => {
                 </Form>
               )}
             </Formik>
-
-            <div className="flex mt-[20px] justify-center gap-[10px]">
-              <p className="text-base">Don’t have an account?</p>
-              <button onClick={handleSignUpClick} className="text-[#2563EB]">
-                Sign up
-              </button>
-            </div>
           </div>
 
           <div className="w-[856px] h-[904px]">
