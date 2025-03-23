@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import FoodMenu from "./_foodMenu/page";
 
-// Define types for categories and foods
 interface Category {
   id: number;
   categoryName: string;
@@ -32,7 +31,7 @@ export const Section = () => {
   const getDataFoods = async () => {
     try {
       const response = await axios.get("http://localhost:4000/foods");
-      setFoods(response.data); // Set foods data from the server
+      setFoods(response.data);
       console.log(response);
     } catch (error) {
       console.error("Error fetching foods:", error);
@@ -41,7 +40,7 @@ export const Section = () => {
 
   useEffect(() => {
     getCategoriesData();
-    getDataFoods(); // Fetch the foods when the component mounts
+    getDataFoods();
   }, []);
 
   return (
@@ -75,7 +74,7 @@ export const Section = () => {
           </div>
         </div>
       </div>
-      <FoodMenu foods={foods} /> {/* Passing foods as a prop */}
+      <FoodMenu foods={foods} />
     </>
   );
 };

@@ -7,16 +7,10 @@ import { userSchema } from "@/utils/loginValidation";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-
 type LoginInfoTypes = {
   email: string;
   password: string;
 };
-
-const NEXT_PUBLIC_CLOUDINARY_APIKEY = "533495513536988";
-const CLOUDINARY_UPLOAD_PRESE = "ml_default";
-const CLOUDINARY_CLOUD_NAME = "dfutcgigt";
-const API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
 export const Login = () => {
   const { push } = useRouter();
@@ -28,20 +22,15 @@ export const Login = () => {
     password: "",
   });
 
-  // const handleClick = () => {
-  //   toast.success("This is a success message!");
-  //   toast.error("This is an error message!");
-  // };
-
   const handleSubmit = async (values: LoginInfoTypes) => {
     try {
       const response = await axios.post(
         `http://localhost:4000/users/login`,
         values
       );
-
-      console.log(response.data.user.role);
       if (response.data.user.role == "USER") {
+        setGetDatas(response.data);
+
         push("/homePage");
       }
     } catch (error: any) {
