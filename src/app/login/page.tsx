@@ -15,7 +15,6 @@ type LoginInfoTypes = {
 export const Login = () => {
   const { push } = useRouter();
   const [getDatas, setGetDatas] = useState([]);
-  const [showStepOne, setShowStepOne] = useState(false);
 
   const [valueSign, setValueSign] = useState({
     email: "",
@@ -30,6 +29,7 @@ export const Login = () => {
       );
       if (response.data.user.role == "USER") {
         setGetDatas(response.data);
+        localStorage.setItem("token", response.data.token);
 
         push("/homePage");
       }

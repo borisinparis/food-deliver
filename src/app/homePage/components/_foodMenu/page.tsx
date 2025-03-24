@@ -101,67 +101,75 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
   const addToCart = (food: Food) => {
     setCart((prevCart) => {
       const itemIndex = prevCart.findIndex((item) => item.food.id === food.id);
-      if (itemIndex > -1) {
+      console.log(itemIndex);
+
+      if (itemIndex > 0) {
         return prevCart;
       }
       return [...prevCart, { food, quantity: 1 }];
     });
+    localStorage.setItem(
+      "foods",
+      JSON.stringify([...cart, { food, quantity: 1 }])
+    );
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center">Loading...</div>;
   }
 
   return (
     <>
-      {error && <div className="error">{error}</div>}
+      {error && <div className="text-center text-red-600">{error}</div>}
       {getCategories.map((category) => (
-        <div key={category._id}>
-          <h2>{category.categoryName}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div key={category._id} className="mt-8">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+            {category.categoryName}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4">
             {getFoods
               .filter((food) => food.category === category._id)
               .map((food) => (
                 <Dialog key={food.id}>
                   <DialogTrigger asChild>
                     <Button
-                      className="pt-3 w-[371px] h-full bg-white rounded-lg shadow-lg"
+                      className="bg-white w-[400px] h-[300px] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300"
                       variant="outline"
                     >
-                      <div className="pt-3">
+                      <div className="w-full h-64 bg-gray-100 relative">
                         <img
-                          className="w-full h-64 object-cover overflow-hidden"
+                          className="w-full h-full object-cover"
                           src={food.image}
                           alt={food.foodName}
                         />
-                        <div className="flex justify-between p-4">
-                          <h3 className="text-lg font-semibold text-gray-800">
+                        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                          <h3 className="text-xl font-semibold text-white">
                             {food.foodName}
                           </h3>
-                          <div className="flex justify-between items-center mt-2">
-                            <span className="text-red-700 font-semibold">{`$${food.price}`}</span>
-                          </div>
+                          <p className="text-base text-white mb-1">
+                            {food.ingredients}
+                          </p>
+                          <p className="text-sm text-red-500 mt-2">{`$${food.price}`}</p>
                         </div>
-                        <span className="p-4 text-gray-600 text-sm">
-                          {food.ingredients}
-                        </span>
                       </div>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <div className="flex gap-4 py-4">
+                  <DialogContent className="sm:max-w-[425px] px-6 py-4 bg-white rounded-lg shadow-xl">
+                    <div className="flex gap-6 py-4">
                       <img
-                        className="w-full h-64 object-cover"
+                        className="w-48 h-48 object-cover rounded-lg shadow-md"
                         src={food.image}
                         alt={food.foodName}
                       />
-                      <div>
-                        <h2 className="text-[#EF4444]">{food.foodName}</h2>
-                        <p>{food.ingredients}</p>
+                      <div className="flex-1">
+                        <h2 className="text-[#EF4444] text-xl font-semibold">
+                          {food.foodName}
+                        </h2>
+                        <p className="mt-2 text-gray-600">{food.ingredients}</p>
                         <div className="flex justify-between mt-4">
                           <div>
-                            <p>Total price</p>
-                            <p>
+                            <p className="text-lg">Total price</p>
+                            <p className="text-xl font-semibold text-gray-800">
                               $
                               {food.price *
                                 (cart.find((item) => item.food.id === food.id)
@@ -173,11 +181,11 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
                               onClick={() =>
                                 handleQuantityChange(food.id, "decrease")
                               }
-                              className="text-xl px-2 py-1 border rounded"
+                              className="text-xl px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-all"
                             >
                               -
                             </button>
-                            <p>
+                            <p className="text-lg">
                               {cart.find((item) => item.food.id === food.id)
                                 ?.quantity || 1}
                             </p>
@@ -185,7 +193,7 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
                               onClick={() =>
                                 handleQuantityChange(food.id, "increase")
                               }
-                              className="text-xl px-2 py-1 border rounded"
+                              className="text-xl px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 transition-all"
                             >
                               +
                             </button>
@@ -193,8 +201,12 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
                         </div>
                       </div>
                     </div>
-                    <DialogFooter>
-                      <Button onClick={() => addToCart(food)} type="button">
+                    <DialogFooter className="text-center">
+                      <Button
+                        onClick={() => addToCart(food)}
+                        type="button"
+                        className="w-full py-2 bg-red-700 text-white rounded-md"
+                      >
                         Add to Cart
                       </Button>
                     </DialogFooter>
