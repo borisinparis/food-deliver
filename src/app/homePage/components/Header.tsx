@@ -11,6 +11,8 @@ import {
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+
 interface Food {
   foodName: string;
   ingredients: string;
@@ -34,6 +36,29 @@ export const Header = () => {
     localStorage.removeItem("foods");
     push("/login");
   }
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+      const decodedToken = jwtDecode<TokenData>(token);
+      const userId = decodedToken.data.email;
+
+      const response = await axios.post("http://localhost:4000/order", {
+        user: userId,
+        foodOrderItems: foods,
+        totalPrice,
+        status: "PENDING",
+      });
+
+      console.log("Successfully submitted:", response.data);
+    } catch (error) {
+      console.error("Error submitting to backend:", error);
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,8 +71,14 @@ export const Header = () => {
         setFoods(storedFoods);
       }
 
-      const token = localStorage.getItem("token") || "[]";
-      const decodedToken = jwtDecode<TokenData>(token);
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decodedToken = jwtDecode<TokenData>(token);
+        } catch (error) {
+          console.error("Invalid token:", error);
+        }
+      }
     }
   }, []);
 
@@ -58,6 +89,7 @@ export const Header = () => {
   useEffect(() => {
     setTotalPrice(getTotalPrice());
   }, [foods]);
+  console.log(foods);
 
   const token = localStorage.getItem("token") || "[]";
   const tokenData = jwtDecode<TokenData>(token);
@@ -65,12 +97,7 @@ export const Header = () => {
   return (
     <div className="w-full px-5 flex items-center justify-between h-[68px] bg-black">
       <div className="flex">
-        <Image
-          src="/logo.png"
-          width={50}
-          height={50}
-          alt="Picture of the author"
-        />
+        <Image src="/logo.png" width={50} height={50} alt="Logo" />
         <div>
           <div className="flex">
             <div className="text-white">Nom</div>
@@ -109,7 +136,7 @@ export const Header = () => {
               src="/Vector (2).png"
               width={30}
               height={30}
-              alt="Another icon"
+              alt="Cart icon"
             />
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -121,22 +148,20 @@ export const Header = () => {
                 <img
                   src={food.food.image}
                   className="w-[124px] h-[120px]"
-                  alt=""
+                  alt={food.food.foodName}
                 />
                 <p className="text-red-500">${food.food.price}</p>
               </div>
             ))}
             <DropdownMenuItem>{`Total price: $${totalPrice}`}</DropdownMenuItem>
-            <DropdownMenuItem onClick={handleSignOut}>
-              Checkout
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSubmit}>Checkout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="w-[36px] h-[36px] rounded-2xl bg-red-700"></DropdownMenuTrigger>
+          <DropdownMenuTrigger className="w-[36px] h-[36px] rounded-2xl bg-red-700" />
           <DropdownMenuContent>
-            <DropdownMenuLabel>{tokenData.data.email}</DropdownMenuLabel>
+            <DropdownMenuLabel>{tokenData?.data?.email}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               Sign Out
