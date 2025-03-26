@@ -54,7 +54,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AuthenticationProvider>{children}</AuthenticationProvider>
+        <UserProvider>
+          <AuthenticationProvider>{children}</AuthenticationProvider>
+        </UserProvider>
         <Toaster />
       </body>
     </html>

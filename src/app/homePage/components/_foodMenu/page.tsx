@@ -69,6 +69,10 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
       setGetFoods(foods);
     }
     getCategoriesData();
+    const storedCart = localStorage.getItem("foods");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
   }, [foods]);
 
   const handleQuantityChange = (
@@ -98,7 +102,16 @@ export const FoodMenu = ({ foods }: FoodMenuProps) => {
     });
   };
 
-  const addToCart = (food: Food) => {
+  const addToCart = async (food: Food) => {
+    try {
+      const response = await axios.post("http://localhost:4000/food", {
+        food,
+        quantity: 1,
+      });
+    } catch (error) {
+      console.log("Error items add", error);
+    }
+
     setCart((prevCart) => {
       const itemIndex = prevCart.findIndex((item) => item.food.id === food.id);
       console.log(itemIndex);

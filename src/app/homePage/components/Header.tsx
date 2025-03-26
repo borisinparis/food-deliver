@@ -23,6 +23,7 @@ interface Food {
 interface TokenData {
   data: {
     email: string;
+    _id: string;
   };
 }
 
@@ -45,11 +46,12 @@ export const Header = () => {
         return;
       }
       const decodedToken = jwtDecode<TokenData>(token);
-      const userId = decodedToken.data.email;
-
+      const userEmail = decodedToken.data.email;
+      const userId = decodedToken.data._id;
+      const foodOrderItems = foods.map((food) => food.food._id);
       const response = await axios.post("http://localhost:4000/order", {
         user: userId,
-        foodOrderItems: foods,
+        foodOrderItems,
         totalPrice,
         status: "PENDING",
       });
