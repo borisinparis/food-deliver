@@ -1,11 +1,12 @@
 "use client";
-import * as Yup from "yup";
+// import React from "react";
 import Login from "@/app/login/page";
 
-export default function Home() {
+export const Home = () => {
   return (
     <div>
       <Login />
     </div>
   );
-}
+};
+export default Home;

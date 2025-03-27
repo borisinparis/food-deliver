@@ -27,9 +27,12 @@ export const Login = () => {
         `http://localhost:4000/users/login`,
         values
       );
+      console.log(response);
+
       if (response.data.user.role == "USER") {
         setGetDatas(response.data);
         localStorage.setItem("token", response.data.token);
+        console.log(response.data);
 
         push("/homePage");
       }

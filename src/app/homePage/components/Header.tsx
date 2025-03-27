@@ -48,7 +48,10 @@ export const Header = () => {
       const decodedToken = jwtDecode<TokenData>(token);
       const userEmail = decodedToken.data.email;
       const userId = decodedToken.data._id;
-      const foodOrderItems = foods.map((food) => food.food._id);
+      const foodOrderItems = foods.map((food) => ({
+        food: food.food._id,
+        quantity: 1,
+      }));
       const response = await axios.post("http://localhost:4000/order", {
         user: userId,
         foodOrderItems,
